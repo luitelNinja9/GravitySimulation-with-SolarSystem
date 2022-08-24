@@ -27,6 +27,7 @@ uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
 uniform int button;
 uniform float distance;
+uniform int cbutton;
 
 
 layout(binding = 0) uniform sampler2D samp;
@@ -81,8 +82,12 @@ vec3 specular = light.specular.xyz  * pow(max(cosPhi,0.0), 5.0);
 		 
 //fragColor = textureColor * vec4((ambient + diffuse + specular), 1.0);
 
-fragColor = (globalAmbient)*0.14f + 
+if(cbutton == 1) fragColor = textureColor; 
+if(cbutton == 2) fragColor = vec4(0.2,0.7,0.2,1.0)	; 
+else if(cbutton == 0) fragColor = (globalAmbient)*0.14f + 
 	textureColor * (light.ambient*(attenDis*15.0f)*6.0+
 	1.5*(light.diffuse*15.0f)*attenDis*max(cosTheta,0.0)) + 
 	1.1*attenDis*10.0f*(light.specular*pow(max(cosPhi,0.0), 2.5));
+
+
 }

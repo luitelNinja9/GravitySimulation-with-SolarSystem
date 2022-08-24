@@ -13,6 +13,12 @@
 #include "Stars.h"
 #include "ImportedModel.h"
 #include "Torus.h"
+#include "Config.h"
+#include "Gravity.h"
+
+
+
+
 
 float all_velocity = 1.0f;
 
@@ -24,6 +30,7 @@ float moveSensitivity = 0.5f;
 float rotationSensitivity = 0.02f;
 float delta = 0.00f;
 glm::mat4 Rotation = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0, 1, 0));
+glm::mat4 Rotation_drop = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0, 1, 0));
 
 float dis = 0.0f;
 
@@ -72,7 +79,7 @@ void installLights(glm::mat4 vMatrix);
 
 
 #define numVAOs 1
-#define numVBOs 19
+#define numVBOs 21
 //using namespace std;
 
 
@@ -101,7 +108,7 @@ GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
 
 //Variable used in display
-GLuint mvLoc, projLoc, vLoc, sunTexture, moonTexture, earthNormalTexture, menuButtonTex, skyBackgroundTexture, spaceShipTexture,satelliteTexture,satelliteTexture1,saturnRingTexture;
+GLuint mvLoc, projLoc, vLoc, sunTexture, moonTexture,earthTexture, earthNormalTexture, menuButtonTex, skyBackgroundTexture, spaceShipTexture,satelliteTexture,satelliteTexture1,saturnRingTexture;
 GLuint planetTexture;
 
 int width, height;
@@ -114,7 +121,7 @@ glm::vec3 currentLightPos, lightPosV;
 
 //L
 //Location for shader uniform variable
-GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mAmbLoc, mDiffLoc, mSpecLoc, mShiLoc, buttonLoc,disLoc;
+GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mAmbLoc, mDiffLoc, mSpecLoc, mShiLoc, buttonLoc,disLoc,Clickable_button_loc;
 glm::vec3 initialLightLoc = glm::vec3(0.0f, 0.0f, 0.0f);
 float lightPos[3];
 //L
@@ -133,6 +140,12 @@ float previous, now, radius, dt;
 //Called from init
 void setupVertices(void)
 {
+	std::vector<float>cubeVertices = myCube.getVertices();
+	std::vector<float>cubeTexCoords = myCube.getTexCoordsOrtho();
+	int cubeNumIndices = myCube.getNumIndices();
+
+
+
 	//Uncomment For Adding sample Button
 	float cubePositions[108] =
 	{
@@ -172,12 +185,12 @@ void setupVertices(void)
 			 // bottom face upper right
 			 0.50f, 0.00f, 0.25f, 0.00f, 0.25f, 0.33f,
 			 // bottom face lower left
-		  0.25f, 1.00f, 0.50f, 1.00f, 0.50f, 0.66f,
-		  // top face upper right
-	  0.50f, 0.66f, 0.25f, 0.66f, 0.25f, 1.00f
+			0.25f, 1.00f, 0.50f, 1.00f, 0.50f, 0.66f,
+			// top face upper right
+			0.50f, 0.66f, 0.25f, 0.66f, 0.25f, 1.00f
 	  // top face lower left
 	};
-	/*
+	///*
 		float menuButton[72] =
 		{
 			//0.0f,0.0f,0.0f,1.0f,1.0f,1.0f,
@@ -199,7 +212,7 @@ void setupVertices(void)
 			0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,
 		};
 
-		*/
+		//*/
 
 	glGenVertexArrays(numVAOs, vao);
 	glBindVertexArray(vao[0]);
@@ -417,6 +430,19 @@ void setupVertices(void)
 	//Sphere tangent
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[8]);
 	glBufferData(GL_ARRAY_BUFFER, tanvalues.size() * 4, &tanvalues[0], GL_STATIC_DRAW);
+
+
+
+	//Cube For Button
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[19]);
+	glBufferData(GL_ARRAY_BUFFER, cubeVertices.size() * 4, &cubeVertices[0], GL_STATIC_DRAW);
+
+
+	//glBindBuffer(GL_ARRAY_BUFFER, vbo[4]);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(menuButton) , menuButton, GL_STATIC_DRAW);
+	//cube Texture
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[20]);
+	glBufferData(GL_ARRAY_BUFFER, cubeTexCoords.size() * 4, &cubeTexCoords[0], GL_STATIC_DRAW);
 }
 
 void setupShadowBuffers(GLFWwindow* window) {
@@ -439,19 +465,6 @@ void setupShadowBuffers(GLFWwindow* window) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Step 4 : Init(Definition)  :: Application Specific initialization
 //Buffers are created in init or at start of the program
 //In OpenGL buffer is contained in Vertex Buffer Object(VBO)
@@ -470,6 +483,7 @@ void init(GLFWwindow* window)
 
 	sunTexture = loadTexture("textures/8k_sun.jpg");
 	moonTexture = loadTexture("textures/8k_moon.jpg");
+	earthTexture = loadTexture("textures/2k_earth_daymap.jpg");
 	earthNormalTexture = loadTexture("textures/8k_earth_normal_map.tif");
 
 	planet_textures[0] = loadTexture("textures/2k_mercury.jpg");
@@ -504,7 +518,13 @@ void init(GLFWwindow* window)
 
 
 	//planetTexture = loadTexture("2k_earth_daymap.jpg");
-	//menuButtonTex = loadTexture("Menu.png");
+	menuButtonTex = loadTexture("textures/2k_neptune_normal.jpg");
+
+
+	GPB::GPButton[0].setBTexture(moonTexture);
+	GPB::GPButton[1].setBTexture(earthTexture);
+	GPB::GPButton[2].setBTexture(sunTexture);
+
 
 
 	//Stars to draw
@@ -595,6 +615,78 @@ void display(GLFWwindow* window, double currentTime)
 
 
 
+	//delete
+	//vMat = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f,0.0f,100.0f);
+
+//	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(1742.50f,1080.0f-55.0f, 0.0f));
+//	vMat *= glm::scale(glm::mat4(1.0f), glm::vec3(137.50f, 30.0f, 1.0f));
+	oMat = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f);
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(oMat));
+
+	for (int i = 0; i < GPB::count; ++i)
+	{
+		vMat = glm::translate(glm::mat4(1.0f), glm::vec3(GPB::GPButton[i].getCentre().x, 1080.0f - GPB::GPButton[i].getCentre().y, 0.0f));
+		vMat *= glm::scale(glm::mat4(1.0f), glm::vec3(GPB::GPButton[i].getScale().x, GPB::GPButton[i].getScale().y, 1.0f));
+		//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(1.7f, 1.05f, -2.0f));
+		//vMat *= glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.065f, 0.03f));
+
+		invTrMat = glm::transpose(glm::inverse(vMat));
+
+		glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(vMat));
+		//L
+		glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
+
+		dis = 6.0f;
+		buttonLoc = glGetUniformLocation(renderingProgram, "distance");
+		glProgramUniform1f(renderingProgram, buttonLoc, dis);
+
+		//Buttons
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[19]);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[20]);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(1);
+
+		//Menu Button
+		glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, menuButtonTex);
+		glBindTexture(GL_TEXTURE_2D, GPB::GPButton[i].getBTexture());
+
+		Clickable_button = GPB::GPButton[i].getHover();
+
+		Clickable_button_loc = glGetUniformLocation(renderingProgram, "cbutton");
+		glProgramUniform1i(renderingProgram, Clickable_button_loc, Clickable_button);
+
+
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, planetTexture);
+
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_CCW);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glDrawArrays(GL_TRIANGLES, 0, myCube.getNumIndices());
+	}
+
+
+
+	Clickable_button = 0;
+	//buttonLoc = glGetUniformLocation(renderingProgram, "button");
+	glProgramUniform1i(renderingProgram, Clickable_button_loc, Clickable_button);
+
+
+
+
+
+	stars_copy = stars_;
+	planets_copy = planets_;
+	sattelites_copy = sattelites_;
+	calculateMotionParameters(stars_, stars_copy, planets_, planets_copy, sattelites_, sattelites_copy);
+	calculateMotionParameters(planets_, planets_copy, stars_, stars_copy, sattelites_, sattelites_copy);
+	calculateMotionParameters(sattelites_, sattelites_copy, stars_, stars_copy, planets_, planets_copy);
+
 
 
 	//GLuint dis = glGetUniformLocation(renderingProgram, "distance");
@@ -669,6 +761,7 @@ void display(GLFWwindow* window, double currentTime)
 
 	//L
 	//Light Position
+	vMat = Rotation * glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
 	currentLightPos = glm::vec3(initialLightLoc.x, initialLightLoc.y, initialLightLoc.z);
 	installLights(vMat);
 
@@ -680,9 +773,15 @@ void display(GLFWwindow* window, double currentTime)
 	disLoc = glGetUniformLocation(renderingProgram, "button");
 	glProgramUniform1f(renderingProgram, disLoc, button);
 
+	glfwGetFramebufferSize(window, &width, &height);
+	aspect = float(width) / float(height);
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);//1.0472f = 60 degrees
+	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+
 	//sun.stackVariable
 	//calculateMotionParameters();
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
 	//button = 0;
 	//buttonLoc = glGetUniformLocation(renderingProgram, "button");
 	//glProgramUniform1i(renderingProgram, buttonLoc, button);
@@ -690,6 +789,234 @@ void display(GLFWwindow* window, double currentTime)
 	//stars_copy = stars;
 	//calculateMotionParameters(stars,stars_copy);
 
+
+	for (int i = 0; i < stars_.size(); i++)
+	{//The sun
+
+		stars_[i].stackVariable.push(vMat);
+		stars_[i].stackVariable.push(stars_[i].stackVariable.top());
+		stars_[i].stackVariable.top() *= glm::translate(glm::mat4(1.0f), stars_[i].positionVec() * zoomFeature);
+		stars_[i].stackVariable.push(stars_[i].stackVariable.top());
+		stars_[i].stackVariable.top() *= glm::rotate(glm::mat4(1.0f), float(currentTime) * stars_[i].getAngularSpeed(), glm::vec3(0.0f, 1.0f, 0.0f));
+		//mvStack.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(zoomFeature*2.0f, zoomFeature * 2.0f, zoomFeature * 2.0f));
+		stars_[i].stackVariable.top() *= glm::scale(glm::mat4(1.0f), stars_[i].scaleVec() * zoomFeature);
+
+		//L
+		invTrMat = glm::transpose(glm::inverse(stars_[i].stackVariable.top()));
+		glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
+
+
+		//Uncomment to see the lower surface
+		//mvStack.top() *= glm::rotate(glm::mat4(1.0f), -0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(stars_[i].stackVariable.top()));
+
+		dis = 4.3f;
+		buttonLoc = glGetUniformLocation(renderingProgram, "distance");
+		glProgramUniform1f(renderingProgram, buttonLoc, dis);
+
+		//glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		//glEnableVertexAttribArray(0);
+
+		//glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+		//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		//glEnableVertexAttribArray(1);
+
+		//L
+		//glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		//glEnableVertexAttribArray(2);
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(1);
+
+		//L
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(2);
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[8]);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(3);
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, sunTexture);
+
+		// get the locations of the light and material fields in the shader
+		//globalAmbLoc = glGetUniformLocation(renderingProgram, "globalAmbient");
+		//ambLoc = glGetUniformLocation(renderingProgram, "light.ambient");
+		//diffLoc = glGetUniformLocation(renderingProgram, "light.diffuse");
+		//specLoc = glGetUniformLocation(renderingProgram, "light.specular");
+		
+		
+		//posLoc = glGetUniformLocation(renderingProgram, "light.position");
+
+		//lightPosV = glm::vec3(vMat * glm::vec4(stars_[i].positionVec(), 1.0));
+		
+		// set the uniform light and material values in the shader
+		//glProgramUniform4fv(renderingProgram, globalAmbLoc, 1, globalAmbient);
+		//glProgramUniform4fv(renderingProgram, ambLoc, 1, lightAmbient);
+		//glProgramUniform4fv(renderingProgram, diffLoc, 1, lightDiffuse);
+		//glProgramUniform4fv(renderingProgram, specLoc, 1, lightSpecular);
+		
+		//lightPos[0] = lightPosV.x;
+		//lightPos[1] = lightPosV.y;
+		//lightPos[2] = lightPosV.z;
+
+		//glProgramUniform3fv(renderingProgram, posLoc, 1, lightPos);
+
+
+
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_CCW);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+
+		glDrawArrays(GL_TRIANGLES, 0, mySphere.getNumIndices());
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		stars_[i].stackVariable.pop();
+		//}
+	}
+
+	for (int i = 0; i < sattelites_.size(); i++)
+	{//The sun
+
+		sattelites_[i].stackVariable.push(vMat);
+		sattelites_[i].stackVariable.push(sattelites_[i].stackVariable.top());
+		sattelites_[i].stackVariable.top() *= glm::translate(glm::mat4(1.0f), sattelites_[i].positionVec() * zoomFeature);
+		sattelites_[i].stackVariable.push(sattelites_[i].stackVariable.top());
+		sattelites_[i].stackVariable.top() *= glm::rotate(glm::mat4(1.0f), float(currentTime) * sattelites_[i].getAngularSpeed(), glm::vec3(0.0f, 1.0f, 0.0f));
+		//mvStack.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(zoomFeature*2.0f, zoomFeature * 2.0f, zoomFeature * 2.0f));
+		sattelites_[i].stackVariable.top() *= glm::scale(glm::mat4(1.0f), sattelites_[i].scaleVec() * zoomFeature);
+
+		//L
+		invTrMat = glm::transpose(glm::inverse(sattelites_[i].stackVariable.top()));
+		glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
+
+		dis = 4.3f;
+		buttonLoc = glGetUniformLocation(renderingProgram, "distance");
+		glProgramUniform1f(renderingProgram, buttonLoc, dis);
+
+		//Uncomment to see the lower surface
+		//mvStack.top() *= glm::rotate(glm::mat4(1.0f), -0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(sattelites_[i].stackVariable.top()));
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(1);
+
+		//L
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(2);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, moonTexture);
+
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_CCW);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+
+		glDrawArrays(GL_TRIANGLES, 0, mySphere.getNumIndices());
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		sattelites_[i].stackVariable.pop();
+		//}
+	}
+
+	for (int i = 0; i < planets_.size(); i++)
+	{//The Earth
+
+		planets_[i].stackVariable.push(vMat);
+		planets_[i].stackVariable.push(planets_[i].stackVariable.top());
+		planets_[i].stackVariable.top() *= glm::translate(glm::mat4(1.0f), planets_[i].positionVec() * zoomFeature);
+		planets_[i].stackVariable.push(planets_[i].stackVariable.top());
+		planets_[i].stackVariable.top() *= glm::rotate(glm::mat4(1.0f), float(currentTime) * planets_[i].getAngularSpeed(), glm::vec3(0.0f, 1.0f, 0.0f));
+		//mvStack.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(zoomFeature*2.0f, zoomFeature * 2.0f, zoomFeature * 2.0f));
+		planets_[i].stackVariable.top() *= glm::scale(glm::mat4(1.0f), planets_[i].scaleVec() * zoomFeature);
+
+		//L
+		invTrMat = glm::transpose(glm::inverse(planets_[i].stackVariable.top()));
+		glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
+
+		dis = 4.3f;
+		buttonLoc = glGetUniformLocation(renderingProgram, "distance");
+		glProgramUniform1f(renderingProgram, buttonLoc, dis);
+		//Uncomment to see the lower surface
+		//mvStack.top() *= glm::rotate(glm::mat4(1.0f), -0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(planets_[i].stackVariable.top()));
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(1);
+
+		//L
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(2);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, earthTexture);
+
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_CCW);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+
+		glDrawArrays(GL_TRIANGLES, 0, mySphere.getNumIndices());
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		planets_[i].stackVariable.pop();
+		//}
+	}
+
+	for (int i = 0; i < stars_.size(); ++i)
+	{
+		stars_[i].stackVariable.pop();
+		stars_[i].stackVariable.pop();
+	}
+
+
+
+	button = normalView;
+	glProgramUniform1i(renderingProgram, buttonLoc, button);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// The solar System
 	for (int i = 0; i < stars.size(); i++)
 	{//The sun
 
@@ -1015,15 +1342,6 @@ void display(GLFWwindow* window, double currentTime)
 				glDrawArrays(GL_TRIANGLES, 0, spaceShip.getNumVertices());
 				//glBindTexture(GL_TEXTURE_2D, 0);
 
-
-
-
-
-
-
-
-
-
 				stars[0].stackVariable.pop();
 				stars[0].stackVariable.push(stars[0].stackVariable.top());
 				//stars[0].stackVariable.push(stars[0].stackVariable.top());
@@ -1225,8 +1543,8 @@ void display(GLFWwindow* window, double currentTime)
 
 
 
-	//button = normalView;
-	//glProgramUniform1i(renderingProgram, buttonLoc, button);
+	Clickable_button = normalView;
+	glProgramUniform1i(renderingProgram, Clickable_button_loc, Clickable_button);
 
 
 }
@@ -1279,12 +1597,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		delta += rotationSensitivity;
 
 		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(0, 1, 0)));
+		Rotation_drop = (glm::rotate(glm::mat4(1.0f), -delta, glm::vec3(0, 1, 0)));
 	}
 		if (key == GLFW_KEY_Z && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
 		delta += rotationSensitivity;
 
 		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(1, 0, 0)));
+		
 	}
 
 	if (key == GLFW_KEY_UP && (action == GLFW_REPEAT || action == GLFW_PRESS)) cameraY += moveSensitivity;
@@ -1296,6 +1616,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		//cameraY -= moveSensitivity;
 		delta -= rotationSensitivity;
 		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(0, 1, 0)));
+		Rotation_drop = (glm::rotate(glm::mat4(1.0f), -delta, glm::vec3(0, 1, 0)));
 	}
 
 	if (key == GLFW_KEY_C && (action == GLFW_REPEAT || action == GLFW_PRESS)) 
@@ -1303,6 +1624,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		//cameraY -= moveSensitivity;
 		delta -= rotationSensitivity;
 		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(1, 0, 0)));
+		
 	}
 
 	if (key == GLFW_KEY_DOWN && (action == GLFW_REPEAT || action == GLFW_PRESS)) cameraY -= moveSensitivity;
@@ -1328,12 +1650,49 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
-static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+#include<cstdlib>
+#include <time.h>
+//srand(time(0));
+
+
+void addStar()
 {
-	if ((xpos >= 1605 && xpos <= 1880) && (ypos >= 26 && ypos <= 85))
-		button = onHoverView;
+	//stars_.push_back(Star_(5.5, 0.1f, "8k_sun.jpg", glm::vec4(cameraX, cameraY + 0.5, cameraZ - 8.0,1.0f), (Rotation * glm::vec4(0.0f, 0.0f, -(rand()%13),1.0f))));
+	glm::vec3 temp_vec = Rotation_drop * glm::vec4(0.0f, 0.5f, -8.0f, 1.0f);
+	//stars_.push_back(Star_(5.5, 0.1f, "8k_sun.jpg", glm::vec4(cameraX, cameraY , cameraZ,1.0f), (-glm::rotate(glm::mat4(1.0f),(0.5f*3.14159f + 2*delta),glm::vec3(0.0,1.0,0.0))*Rotation * glm::vec4(0.0f, 0.0f, (-rand()%13),1.0f))));
+	stars_.push_back(Star_(5.5, 0.1f, "8k_sun.jpg", glm::translate(glm::mat4(1.0f), temp_vec)*glm::vec4(cameraX,cameraY,cameraZ,1.0f), (Rotation_drop*glm::vec4(0.0f, 0.0f, (-rand()%13),1.0f))));
+}
+void addPlanet()
+{
+	glm::vec3 temp_vec = Rotation_drop * glm::vec4(0.0f, 0.5f, -8.0f, 1.0f);
+	planets_.push_back(Planet_(6, 0.3f, "2k_earth_daymap.jpg", glm::translate(glm::mat4(1.0f), temp_vec) * glm::vec4(cameraX, cameraY, cameraZ, 1.0f), (Rotation_drop * glm::vec4(0.0f, 0.0f, (-rand() % 13), 1.0f))));
+}
+void addSattelite()
+{
+	glm::vec3 temp_vec = Rotation_drop * glm::vec4(0.0f, 0.5f, -8.0f, 1.0f);
+	sattelites_.push_back(Sattelite_(4, 0.6f, "8k_moon.jpg", glm::translate(glm::mat4(1.0f), temp_vec) * glm::vec4(cameraX, cameraY, cameraZ, 1.0f), (Rotation_drop * glm::vec4(0.0f, 0.0f, (-rand() % 13), 1.0f))));
 }
 
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	
+	if ((xpos >= 1800 && xpos <= 1850) && (ypos >= 25 && ypos <= 75))
+	{
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) addSattelite();
+	}
+	//else GPB::GPButton[0].resetHover();
+	if ((xpos >= (1760) && xpos <= (1790)) && (ypos >= 25 && ypos <= 75))
+	{
+		//button = onHoverView;
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) addPlanet();
+	}
+	//else GPB::GPButton[1].resetHover();
+	if ((xpos >= (1680) && xpos <= (1730)) && (ypos >= 25 && ypos <= 75))
+	{
+		//button = onHoverView;
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) addStar();
+	}
+}
 
 
 
@@ -1356,6 +1715,31 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 
 //}
 
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	//if ((xpos >= 1605 && xpos <= 1880) && (ypos >= 26 && ypos <= 85))
+	//	button = onHoverView;
+
+	if ((xpos >= 1800 && xpos <= 1850) && (ypos >= 25 && ypos <= 75))
+	{
+		GPB::GPButton[0].setHover();
+	}
+	else GPB::GPButton[0].resetHover();
+	if ((xpos >= (1760) && xpos <= (1790)) && (ypos >= 25 && ypos <= 75))
+	{
+		//button = onHoverView;
+		GPB::GPButton[1].setHover();
+	}
+	else GPB::GPButton[1].resetHover();
+	if ((xpos >= (1680) && xpos <= (1730)) && (ypos >= 25 && ypos <= 75))
+	{
+		//button = onHoverView;
+		GPB::GPButton[2].setHover();
+	}
+	else GPB::GPButton[2].resetHover();
+
+}
+
 int main(void)
 {
 	//Step 1 : Init Graphics Library Framework
@@ -1367,8 +1751,9 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 	//2.create window object from Class and function
-	//GLFWwindow* window = glfwCreateWindow(1920, 1010, "SunEarthMoon!", NULL, NULL); //Last two parameters allow for Full screen and resource sharing
+	//GLFWwindow* window = glfwCreateWindow(600, 600, "SunEarthMoon!", NULL, NULL); //Last two parameters allow for Full screen and resource sharing
 	//GLFWmonitor* monitor = glfwGetWindowMonitor(window);
+	
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -1405,9 +1790,10 @@ int main(void)
 
 
 		//window
-		//glfwGetWindowSize(window, &width, &height);
-		//glfwSetMouseButtonCallback(window, mouse_button_callback);
-		//glfwSetCursorPosCallback(window, cursor_position_callback);
+		glfwGetWindowSize(window, &width, &height);
+		glfwSetCursorPosCallback(window, cursor_position_callback);
+		glfwSetMouseButtonCallback(window, mouse_button_callback);
+		glfwGetCursorPos(window, &xpos, &ypos);
 
 
 		//glfwGetCursorPos(window, &xpos, &ypos);

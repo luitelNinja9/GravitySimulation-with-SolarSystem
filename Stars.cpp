@@ -1,7 +1,7 @@
 #include "Stars.h"
 #include<iostream>
 
-
+///*
 using namespace std;
 
 
@@ -173,4 +173,185 @@ const float Sattelite::getDistance1()
 const float Sattelite::getDistance2()
 {
 	return Sattelite::distance2;
+}
+//*/
+
+
+
+Star_::Star_(int scale_ = 1, float angularSpeed_ = 1.0f, const char* texString_ = "8k_sun.jpg", glm::vec3 position_ = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 velocity_ )
+{
+	if (scale_ >= 1.0f && scale_ <= 10.0f)
+	{
+		Star_::scale = float(scale_) / 2.0f;
+	}
+	else
+	{
+		Star_::scale = float(scale_);
+	}
+	Star_::textureString = texString_;
+	Star_::position = position_;
+	Star_::angularSpeed = angularSpeed_;
+	Star_::mass = pow(scale, 3);
+	Star_::velocity = velocity_;
+	Star_::acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+}
+
+
+const char* Star_::getTextureString()
+{
+	return textureString;
+}
+
+const float Star_::getScale()
+{
+	return scale;
+}
+
+const float Star_::getAngularSpeed()
+{
+	return angularSpeed;
+}
+
+glm::mat4 Star_::translateMatrix()
+{
+	return glm::translate(glm::mat4(1.0f), Star_::position);
+}
+glm::vec3 Star_::positionVec()
+{
+	return Star_::position;
+}
+
+glm::vec3 Star_::velocityVec()
+{
+	return Star_::velocity;
+}
+
+glm::vec3 Star_::accelerationVec()
+{
+	return Star_::acceleration;
+}
+
+glm::vec3 Star_::scaleVec()
+{
+	return glm::vec3(scale, scale, scale);
+}
+
+
+
+Sattelite_::Sattelite_(int scale_ = 1, float angularSpeed_ = 6.0f, const char* texString_ = "8k_moon.jpg", glm::vec3 position_ = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 velocity_)
+{
+	if (scale_ >= 1.0f && scale_ <= 10.0f)
+	{
+		scale = float(scale_) / 40.0f;
+	}
+	else
+	{
+		scale = float(scale_);
+	}
+	textureString = texString_;
+	position = position_;
+	angularSpeed = angularSpeed_;
+	mass = 0.001 * pow(scale, 3);
+	velocity = velocity_;
+	acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+}
+
+
+const char* Sattelite_::getTextureString()
+{
+	return textureString;
+}
+
+const float Sattelite_::getScale()
+{
+	return scale;
+}
+
+const float Sattelite_::getAngularSpeed()
+{
+	return angularSpeed;
+}
+
+glm::mat4 Sattelite_::translateMatrix()
+{
+	return glm::translate(glm::mat4(1.0f), position);
+}
+glm::vec3 Sattelite_::positionVec()
+{
+	return position;
+}
+
+glm::vec3 Sattelite_::velocityVec()
+{
+	return velocity;
+}
+
+glm::vec3 Sattelite_::accelerationVec()
+{
+	return Sattelite_::acceleration;
+}
+
+glm::vec3 Sattelite_::scaleVec()
+{
+	return glm::vec3(scale, scale, scale);
+}
+
+
+
+Planet_::Planet_(int scale_ = 1, float angularSpeed_ = 3.0f, const char* texString_ = "4k_earth_daymap.jpg", glm::vec3 position_ = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 velocity_)
+{
+	if (scale_ >= 1.0f && scale_ <= 10.0f)
+	{
+		scale = float(scale_) / 20.0f;
+	}
+	else
+	{
+		scale = float(scale_);
+	}
+	textureString = texString_;
+	position = position_;
+	angularSpeed = angularSpeed_;
+	mass = 10.0f * pow(scale, 3);
+	velocity = velocity_;
+	acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+}
+
+
+const char* Planet_::getTextureString()
+{
+	return textureString;
+}
+
+const float Planet_::getScale()
+{
+	return scale;
+}
+
+const float Planet_::getAngularSpeed()
+{
+	return angularSpeed;
+}
+
+glm::mat4 Planet_::translateMatrix()
+{
+	return glm::translate(glm::mat4(1.0f), position);
+}
+glm::vec3 Planet_::positionVec()
+{
+	return position;
+}
+
+glm::vec3 Planet_::velocityVec()
+{
+	return velocity;
+}
+
+glm::vec3 Planet_::accelerationVec()
+{
+	return acceleration;
+}
+
+glm::vec3 Planet_::scaleVec()
+{
+	return glm::vec3(scale, scale, scale);
 }

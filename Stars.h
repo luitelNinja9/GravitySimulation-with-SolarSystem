@@ -6,7 +6,7 @@
 
 #ifndef STARS
 #define STARS
-
+///*
 using namespace std;
 
 class Star
@@ -96,6 +96,102 @@ public:
 	const int withSattelite();
 	glm::vec3 scaleVec();
 }; 
+//*/
+
+
+class Star_
+{
+private:
+
+	float scale;
+	const char* textureString;
+	float angularSpeed;
+
+
+
+
+public:
+	stack<glm::mat4> stackVariable;
+	float mass;
+
+
+	glm::vec3 position;
+	glm::vec3 velocity;
+	glm::vec3 acceleration;
+
+	Star_(int scale_, float angularSpeed_, const char* texString_, glm::vec3 position_, glm::vec3 velocity_ = glm::vec3(0.0f));
+	const char* getTextureString();
+	const float getScale();
+	const float getAngularSpeed();
+	glm::mat4 translateMatrix();
+	glm::vec3 positionVec();
+	glm::vec3 scaleVec();
+	glm::vec3 accelerationVec();
+	glm::vec3 velocityVec();
+
+};
+
+class Planet_
+{
+private:
+
+	float scale;
+	const char* textureString;
+	float angularSpeed;
+
+
+
+public:
+	stack<glm::mat4> stackVariable;
+	float mass;
+
+
+	glm::vec3 position;
+	glm::vec3 velocity;
+	glm::vec3 acceleration;
+
+	Planet_(int scale_, float angularSpeed_, const char* texString_, glm::vec3 position_, glm::vec3 velocity_ = glm::vec3(0.0f));
+	const char* getTextureString();
+	const float getScale();
+	const float getAngularSpeed();
+	glm::mat4 translateMatrix();
+	glm::vec3 positionVec();
+	glm::vec3 scaleVec();
+	glm::vec3 accelerationVec();
+	glm::vec3 velocityVec();
+
+};
+
+class Sattelite_
+{
+private:
+
+	float scale;
+	const char* textureString;
+	float angularSpeed;
+
+
+
+public:
+	stack<glm::mat4> stackVariable;
+	float mass;
+
+
+	glm::vec3 position;
+	glm::vec3 velocity;
+	glm::vec3 acceleration;
+
+	Sattelite_(int scale_, float angularSpeed_, const char* texString_, glm::vec3 position_, glm::vec3 velocity_ = glm::vec3(0.0f));
+	const char* getTextureString();
+	const float getScale();
+	const float getAngularSpeed();
+	glm::mat4 translateMatrix();
+	glm::vec3 positionVec();
+	glm::vec3 scaleVec();
+	glm::vec3 accelerationVec();
+	glm::vec3 velocityVec();
+
+};
 
 
 
