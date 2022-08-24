@@ -1584,8 +1584,8 @@ int main(void)
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "SunEarthMoon!", NULL, NULL); //Last two parameters allow for Full screen and resource sharing
-	//GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "SunEarthMoon", monitor, NULL);
+	//GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "SunEarthMoon!", NULL, NULL); //Last two parameters allow for Full screen and resource sharing
+	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "SunEarthMoon", monitor, NULL);
 	//3.make window context current from function
 	glfwMakeContextCurrent(window);
 
