@@ -5,5 +5,7 @@
 \contentsline {section}{Methodology}{5}%
 \contentsline {subsection}{Techonologies Used}{5}%
 \contentsline {subsection}{Algorithm Used}{5}%
-\contentsline {section}{Conclusion}{9}%
-\contentsline {section}{References}{9}%
+\contentsline {section}{Result}{9}%
+\contentsline {section}{Conclusion}{10}%
+\contentsline {section}{Further Enhancement}{10}%
+\contentsline {section}{References}{10}%
