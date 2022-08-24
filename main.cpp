@@ -1,7 +1,9 @@
 
-//####SunEarthMoon####//
+//####Solar System and Gravity Simulation####//
 //Step 0 : Include files and Definitions
 #include <cmath>
+#include<cstdlib>
+#include <time.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include<glm/gtc/matrix_transform.hpp>
@@ -26,8 +28,8 @@ Torus myTorus_ring(0.5f, 0.145f, 48);
 
 float zoomFeature = 1;
 float zoomSensitivity = 0.1f;
-float moveSensitivity = 0.5f;
-float rotationSensitivity = 0.02f;
+float moveSensitivity = 0.1f;
+float rotationSensitivity = 0.01f;
 float delta = 0.00f;
 glm::mat4 Rotation = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0, 1, 0));
 glm::mat4 Rotation_drop = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0, 1, 0));
@@ -614,12 +616,6 @@ void display(GLFWwindow* window, double currentTime)
 	GLuint nLoc = glGetUniformLocation(renderingProgram, "norm_matrix");
 
 
-
-	//delete
-	//vMat = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f,0.0f,100.0f);
-
-//	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(1742.50f,1080.0f-55.0f, 0.0f));
-//	vMat *= glm::scale(glm::mat4(1.0f), glm::vec3(137.50f, 30.0f, 1.0f));
 	oMat = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f);
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(oMat));
 
@@ -627,8 +623,7 @@ void display(GLFWwindow* window, double currentTime)
 	{
 		vMat = glm::translate(glm::mat4(1.0f), glm::vec3(GPB::GPButton[i].getCentre().x, 1080.0f - GPB::GPButton[i].getCentre().y, 0.0f));
 		vMat *= glm::scale(glm::mat4(1.0f), glm::vec3(GPB::GPButton[i].getScale().x, GPB::GPButton[i].getScale().y, 1.0f));
-		//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(1.7f, 1.05f, -2.0f));
-		//vMat *= glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.065f, 0.03f));
+
 
 		invTrMat = glm::transpose(glm::inverse(vMat));
 
@@ -686,74 +681,6 @@ void display(GLFWwindow* window, double currentTime)
 	calculateMotionParameters(stars_, stars_copy, planets_, planets_copy, sattelites_, sattelites_copy);
 	calculateMotionParameters(planets_, planets_copy, stars_, stars_copy, sattelites_, sattelites_copy);
 	calculateMotionParameters(sattelites_, sattelites_copy, stars_, stars_copy, planets_, planets_copy);
-
-
-
-	//GLuint dis = glGetUniformLocation(renderingProgram, "distance");
-	//Build Perspective matrix
-	//glfwGetFramebufferSize(window, &width, &height);
-	//aspect = float(width) / float(height);
-	//pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);//1.0472f = 60 degrees
-	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
-
-	//Build view,model and model-view matrix
-	//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, cameraZ - 2.00f));
-	//vMat *= glm::translate(glm::mat4(1.0f), glm::vec3(cameraX +1.8f,cameraY +1.0f, cameraZ-2.00f));
-
-
-	//oMat = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f);
-	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(oMat));
-
-	//delete
-	//vMat = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f,0.0f,100.0f);
-
-	//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(1742.50f,1080.0f-55.0f, 0.0f));
-	//vMat *= glm::scale(glm::mat4(1.0f), glm::vec3(137.50f, 30.0f, 1.0f));
-	//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(1.7f, 1.05f, -2.0f));
-	//vMat *= glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.065f, 0.03f));
-
-	//invTrMat = glm::transpose(glm::inverse(vMat));
-
-	//glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(vMat));
-	//L
-	//glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
-
-
-
-	/*
-	//Uncomment to add Sample clickable button
-	//Buttons
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[4]);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(1);
-
-	//Menu Button
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, menuButtonTex);
-
-	//button = normalView;
-	buttonLoc = glGetUniformLocation(renderingProgram, "button");
-	glProgramUniform1i(renderingProgram, buttonLoc, button);
-
-
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, planetTexture);
-
-	//glEnable(GL_CULL_FACE);
-	//glFrontFace(GL_CCW);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-
-
-
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-
-	*/
-
 	
 	//Build view,model and model-view matrix
 	//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
@@ -779,15 +706,7 @@ void display(GLFWwindow* window, double currentTime)
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
 
-	//sun.stackVariable
-	//calculateMotionParameters();
-	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
-	//button = 0;
-	//buttonLoc = glGetUniformLocation(renderingProgram, "button");
-	//glProgramUniform1i(renderingProgram, buttonLoc, button);
 
-	//stars_copy = stars;
-	//calculateMotionParameters(stars,stars_copy);
 
 
 	for (int i = 0; i < stars_.size(); i++)
@@ -805,29 +724,11 @@ void display(GLFWwindow* window, double currentTime)
 		invTrMat = glm::transpose(glm::inverse(stars_[i].stackVariable.top()));
 		glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
 
-
-		//Uncomment to see the lower surface
-		//mvStack.top() *= glm::rotate(glm::mat4(1.0f), -0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
-
 		glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(stars_[i].stackVariable.top()));
 
 		dis = 4.3f;
 		buttonLoc = glGetUniformLocation(renderingProgram, "distance");
 		glProgramUniform1f(renderingProgram, buttonLoc, dis);
-
-		//glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		//glEnableVertexAttribArray(0);
-
-		//glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-		//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-		//glEnableVertexAttribArray(1);
-
-		//L
-		//glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		//glEnableVertexAttribArray(2);
-
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -850,31 +751,6 @@ void display(GLFWwindow* window, double currentTime)
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, sunTexture);
-
-		// get the locations of the light and material fields in the shader
-		//globalAmbLoc = glGetUniformLocation(renderingProgram, "globalAmbient");
-		//ambLoc = glGetUniformLocation(renderingProgram, "light.ambient");
-		//diffLoc = glGetUniformLocation(renderingProgram, "light.diffuse");
-		//specLoc = glGetUniformLocation(renderingProgram, "light.specular");
-		
-		
-		//posLoc = glGetUniformLocation(renderingProgram, "light.position");
-
-		//lightPosV = glm::vec3(vMat * glm::vec4(stars_[i].positionVec(), 1.0));
-		
-		// set the uniform light and material values in the shader
-		//glProgramUniform4fv(renderingProgram, globalAmbLoc, 1, globalAmbient);
-		//glProgramUniform4fv(renderingProgram, ambLoc, 1, lightAmbient);
-		//glProgramUniform4fv(renderingProgram, diffLoc, 1, lightDiffuse);
-		//glProgramUniform4fv(renderingProgram, specLoc, 1, lightSpecular);
-		
-		//lightPos[0] = lightPosV.x;
-		//lightPos[1] = lightPosV.y;
-		//lightPos[2] = lightPosV.z;
-
-		//glProgramUniform3fv(renderingProgram, posLoc, 1, lightPos);
-
-
 
 		glEnable(GL_CULL_FACE);
 		glFrontFace(GL_CCW);
@@ -998,24 +874,6 @@ void display(GLFWwindow* window, double currentTime)
 	glProgramUniform1i(renderingProgram, buttonLoc, button);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	// The solar System
 	for (int i = 0; i < stars.size(); i++)
 	{//The sun
@@ -1118,9 +976,7 @@ void display(GLFWwindow* window, double currentTime)
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 
-			//glDrawArrays(GL_TRIANGLES, 0, spaceShip.getNumVertices());
 
-			//glBindTexture(GL_TEXTURE_2D, 0);
 			//*/
 			
 		}
@@ -1181,17 +1037,11 @@ void display(GLFWwindow* window, double currentTime)
 
 			glDrawArrays(GL_TRIANGLES, 0, mySphere.getNumIndices());
 
-			//button = 0;
-			//buttonLoc = glGetUniformLocation(renderingProgram, "button");
-			//glProgramUniform1i(renderingProgram, buttonLoc, button);
 
 			///*
 			if (i == 5)
 			{
 				stars[0].stackVariable.pop();
-				//stars[0].stackVariable.push(stars[0].stackVariable.top());
-				//stars[0].stackVariable.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(sin(float(currentTime) * saturn.getRevolutionSpeed()) * 1.0f * saturn.getDistance1() * zoomFeature,
-				//		0.0f, cos(float(currentTime) * saturn.getRevolutionSpeed()) * 1.0f * saturn.getDistance2() * zoomFeature));
 				stars[0].stackVariable.push(stars[0].stackVariable.top());
 				stars[0].stackVariable.top() *= glm::rotate(glm::mat4(1.0f), float(sin(0.3f*currentTime))*0.6f, glm::vec3(0.0f, 1.0f, 0.0f));
 				stars[0].stackVariable.top() *= glm::rotate(glm::mat4(1.0f), float(sin(0.3f*currentTime))*0.6f, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -1438,103 +1288,8 @@ void display(GLFWwindow* window, double currentTime)
 
 
 	}
-	//*/
-
-	//vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
-	//mMat = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -1.5f, 1.5f));
-	//mMat *= glm::rotate(glm::mat4(1.0f), (60 * 3.1415f) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	//mMat *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
-
-	//mvMat = vMat * mMat;
 
 
-
-
-
-
-
-
-
-
-
-	/*
-
-
-
-	//The  Earth
-		stars[0].stackVariable.push(stars[0].stackVariable.top());
-		stars[0].stackVariable.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(sin(float(currentTime) * 0.5f) * 6.0f *zoomFeature,
-		0.0f , cos(float(currentTime) * 0.5f) * 6.0f *zoomFeature));
-		stars[0].stackVariable.push(stars[0].stackVariable.top());
-		stars[0].stackVariable.top() *= glm::rotate(glm::mat4(1.0f), float(currentTime), glm::vec3(0.0f, 1.0f, 0.0f));
-		stars[0].stackVariable.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(zoomFeature*0.2f, zoomFeature*0.2f, zoomFeature*0.2f));
-
-	//L
-	invTrMat = glm::transpose(glm::inverse(stars[0].stackVariable.top()));
-
-	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(stars[0].stackVariable.top()));
-	//L
-	glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(1);
-
-	//L
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(2);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, earthTexture);
-
-	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CCW);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-
-	glDrawArrays(GL_TRIANGLES, 0, mySphere.getNumIndices());
-	stars[0].stackVariable.pop();
-
-	//The Cube Moon
-	stars[0].stackVariable.push(stars[0].stackVariable.top());
-	stars[0].stackVariable.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(sin(float(currentTime) * 2.0f) * 0.5f * zoomFeature, 0.5f * zoomFeature, cos(float(currentTime) * 2.0f) * 0.5f * zoomFeature));
-	stars[0].stackVariable.top() *= glm::rotate(glm::mat4(1.0f), float(currentTime) * 2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	stars[0].stackVariable.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(zoomFeature*0.05f, zoomFeature*0.05f, zoomFeature * 0.05f));
-
-	//L
-	invTrMat = glm::transpose(glm::inverse(stars[0].stackVariable.top()));
-	glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
-
-	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(stars[0].stackVariable.top()));
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(1);
-
-	//L
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(2);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, moonTexture);
-
-	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CCW);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-
-	glDrawArrays(GL_TRIANGLES, 0, mySphere.getNumIndices());
-	stars[0].stackVariable.pop();	stars[0].stackVariable.pop();	stars[0].stackVariable.pop();	stars[0].stackVariable.pop();
-	*/
 	for (int i = 1; i < stars.size(); ++i)
 	{
 		stars[i].stackVariable.pop();
@@ -1586,12 +1341,15 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	}
 
 }
-
-
-
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+int a = 0;
+double time_;
+void key_callback2(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if (key == GLFW_KEY_O && (action == GLFW_PRESS))
+	{
+		a = 1;
+		glfwSetTime(time_);
+	}
 	if (key == GLFW_KEY_E && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
 		delta += rotationSensitivity;
@@ -1599,19 +1357,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(0, 1, 0)));
 		Rotation_drop = (glm::rotate(glm::mat4(1.0f), -delta, glm::vec3(0, 1, 0)));
 	}
-		if (key == GLFW_KEY_Z && (action == GLFW_REPEAT || action == GLFW_PRESS))
+	if (key == GLFW_KEY_Z && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
 		delta += rotationSensitivity;
 
 		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(1, 0, 0)));
-		
+
 	}
 
 	if (key == GLFW_KEY_UP && (action == GLFW_REPEAT || action == GLFW_PRESS)) cameraY += moveSensitivity;
 
 
 
-	if (key == GLFW_KEY_Q && (action == GLFW_REPEAT || action == GLFW_PRESS)) 
+	if (key == GLFW_KEY_Q && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
 		//cameraY -= moveSensitivity;
 		delta -= rotationSensitivity;
@@ -1619,12 +1377,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		Rotation_drop = (glm::rotate(glm::mat4(1.0f), -delta, glm::vec3(0, 1, 0)));
 	}
 
-	if (key == GLFW_KEY_C && (action == GLFW_REPEAT || action == GLFW_PRESS)) 
+	if (key == GLFW_KEY_C && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
 		//cameraY -= moveSensitivity;
 		delta -= rotationSensitivity;
 		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(1, 0, 0)));
-		
+
 	}
 
 	if (key == GLFW_KEY_DOWN && (action == GLFW_REPEAT || action == GLFW_PRESS)) cameraY -= moveSensitivity;
@@ -1648,10 +1406,93 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		cameraX -= moveSensitivity * cos(delta - (3.1415 / 2));
 		cameraZ -= moveSensitivity * sin(delta - (3.1415 / 2));
 	}
+	display(window,time_);
+	glfwSwapBuffers(window);
+	
 }
 
-#include<cstdlib>
-#include <time.h>
+
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+
+	if (key == GLFW_KEY_P && (action == GLFW_PRESS))
+	{
+		while (true)
+		{
+			//cout << "Hello";
+			glfwPollEvents();
+			glfwSetKeyCallback(window, key_callback2);
+			if (a == 1)
+			{
+				break;
+			}
+			//break;
+		}
+		a = 0;
+	}
+
+	if (key == GLFW_KEY_E && (action == GLFW_REPEAT || action == GLFW_PRESS))
+	{
+		delta += rotationSensitivity;
+
+		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(0, 1, 0)));
+		Rotation_drop = (glm::rotate(glm::mat4(1.0f), -delta, glm::vec3(0, 1, 0)));
+	}
+		if (key == GLFW_KEY_Z && (action == GLFW_REPEAT || action == GLFW_PRESS))
+	{
+		delta += rotationSensitivity;
+
+		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(1, 0, 0)));
+		
+	}
+
+	if (key == GLFW_KEY_UP && (action == GLFW_REPEAT || action == GLFW_PRESS)) cameraY += 5.0f*moveSensitivity;
+	if (key == GLFW_KEY_LEFT && (action == GLFW_REPEAT || action == GLFW_PRESS)) cameraX -= 5.0f*moveSensitivity;
+	if (key == GLFW_KEY_RIGHT && (action == GLFW_REPEAT || action == GLFW_PRESS)) cameraX += 5.0f*moveSensitivity;
+
+
+
+	if (key == GLFW_KEY_Q && (action == GLFW_REPEAT || action == GLFW_PRESS)) 
+	{
+		//cameraY -= moveSensitivity;
+		delta -= rotationSensitivity;
+		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(0, 1, 0)));
+		Rotation_drop = (glm::rotate(glm::mat4(1.0f), -delta, glm::vec3(0, 1, 0)));
+	}
+
+	if (key == GLFW_KEY_C && (action == GLFW_REPEAT || action == GLFW_PRESS)) 
+	{
+		//cameraY -= moveSensitivity;
+		delta -= rotationSensitivity;
+		Rotation = (glm::rotate(glm::mat4(1.0f), delta, glm::vec3(1, 0, 0)));
+		
+	}
+
+	if (key == GLFW_KEY_DOWN && (action == GLFW_REPEAT || action == GLFW_PRESS)) cameraY -= 5.0f*moveSensitivity;
+	if (key == GLFW_KEY_D && (action == GLFW_REPEAT || action == GLFW_PRESS))
+	{
+		cameraZ += 5.0f*moveSensitivity * sin(delta);
+		cameraX += 5.0f*moveSensitivity * cos(delta);
+	}
+	if (key == GLFW_KEY_A && (action == GLFW_REPEAT || action == GLFW_PRESS))
+	{
+		cameraZ -= 5.0f*moveSensitivity * sin(delta);
+		cameraX -= 5.0f*moveSensitivity * cos(delta);
+	}
+	if (key == GLFW_KEY_W && (action == GLFW_REPEAT || action == GLFW_PRESS))
+	{
+		cameraX += 5.0f* moveSensitivity * cos(delta - (3.1415 / 2));
+		cameraZ += 5.0f * moveSensitivity * sin(delta - (3.1415 / 2));
+	}
+	if (key == GLFW_KEY_S && (action == GLFW_REPEAT || action == GLFW_PRESS))
+	{
+		cameraX -= 5.0f * moveSensitivity * cos(delta - (3.1415 / 2));
+		cameraZ -= 5.0f * moveSensitivity * sin(delta - (3.1415 / 2));
+	}
+}
+
+
 //srand(time(0));
 
 
@@ -1696,25 +1537,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 
 
-
-//Simple Function to add Star
-//void addStar()
-//{
-//	stars.push_back(Star(3, 0.6f, "8k_sun.jpg", glm::vec3(cameraX, cameraY+0.5, cameraZ-8.0),glm::vec3(-0.0f,0.0f,-2.0f)));
-//}
-
-
-//void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-//{
-//	if ((xpos >= 1605 && xpos <= 1880) && (ypos >= 25 && ypos <= 85))
-//	{
-//		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) addStar();
-//
-//	}
-
-
-//}
-
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	//if ((xpos >= 1605 && xpos <= 1880) && (ypos >= 26 && ypos <= 85))
@@ -1751,7 +1573,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 	//2.create window object from Class and function
-	//GLFWwindow* window = glfwCreateWindow(600, 600, "SunEarthMoon!", NULL, NULL); //Last two parameters allow for Full screen and resource sharing
+	
 	//GLFWmonitor* monitor = glfwGetWindowMonitor(window);
 	
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
@@ -1762,7 +1584,8 @@ int main(void)
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "SunEarthMoon", monitor, NULL);
+	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "SunEarthMoon!", NULL, NULL); //Last two parameters allow for Full screen and resource sharing
+	//GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "SunEarthMoon", monitor, NULL);
 	//3.make window context current from function
 	glfwMakeContextCurrent(window);
 
@@ -1805,6 +1628,7 @@ int main(void)
 		//displayText();
 		//2.Display window
 		display(window, glfwGetTime());//glfwGetTime returns elapsed time since GLFW was initialized
+		time_ = glfwGetTime();
 	//3.Swap buffers ,Vertical synchronization :: Paints the screen
 		glfwSwapBuffers(window);
 		//4.Poll events, Handles events like key Press

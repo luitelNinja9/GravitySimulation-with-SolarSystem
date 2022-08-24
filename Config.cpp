@@ -51,37 +51,14 @@ std::vector<Sattelite_>sattelites_copy;
 
 
 Star_ sun_ = Star_(3, 0.3f, "8k_sun.jpg", glm::vec3(0.0f, 0.0f, 0.0f));
-//Star sun2 = Star(4, 0.4f, "8k_sun.jpg", glm::vec3(16.0f, 4.0f,4.0f),glm::vec3(0.0f));
-//Star sun3 = Star(2, 0.3f, "8k_sun.jpg", glm::vec3(-16.0f, 4.0f,6.0f));
+
 
 
 
 
 Cube myCube = Cube();
 
-//window
-//int width, height;
 
-
-//double xpos, ypos;
-
-//button
-
-
-
-
-//float cameraX, cameraY, cameraZ;
-
-
-
-
-//Variable used in display
-//int normalView = 1;
-//int onHoverView = 2;
-//GLuint sunTexture, moonTexture, earthTexture, menuButtonTex;
-//GLuint planetTexture;
-//GLuint sunBTexture;
-//GLuint ButtonTex[4] = { sunTexture, earthTexture,moonTexture , menuButtonTex };
 
 
 

@@ -1,27 +1,31 @@
 ﻿  main.cpp
-F:\SunEarthMoon\main.cpp(56,23): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-F:\SunEarthMoon\main.cpp(774,47): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-F:\SunEarthMoon\main.cpp(1150,49): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-F:\SunEarthMoon\main.cpp(1206,50): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-F:\SunEarthMoon\main.cpp(1262,50): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-F:\SunEarthMoon\main.cpp(1313,50): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-F:\SunEarthMoon\main.cpp(1357,50): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-F:\SunEarthMoon\main.cpp(1643,57): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-F:\SunEarthMoon\main.cpp(1644,57): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-F:\SunEarthMoon\main.cpp(1648,57): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-F:\SunEarthMoon\main.cpp(1649,57): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-F:\SunEarthMoon\main.cpp(1663,25): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+F:\SunEarthMoon\main.cpp(58,23): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+F:\SunEarthMoon\main.cpp(701,47): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+F:\SunEarthMoon\main.cpp(1006,49): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+F:\SunEarthMoon\main.cpp(1056,50): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+F:\SunEarthMoon\main.cpp(1112,50): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+F:\SunEarthMoon\main.cpp(1163,50): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+F:\SunEarthMoon\main.cpp(1207,50): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+F:\SunEarthMoon\main.cpp(1401,57): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+F:\SunEarthMoon\main.cpp(1402,57): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+F:\SunEarthMoon\main.cpp(1406,57): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+F:\SunEarthMoon\main.cpp(1407,57): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+F:\SunEarthMoon\main.cpp(1485,63): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+F:\SunEarthMoon\main.cpp(1486,64): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+F:\SunEarthMoon\main.cpp(1490,64): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+F:\SunEarthMoon\main.cpp(1491,64): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+F:\SunEarthMoon\main.cpp(1504,25): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
 soil2-debug.lib(SOIL2.obj) : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
 LINK : warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  4 of 1246 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  1 of 1247 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    5 functions had inline decision re-evaluated but remain unchanged
+    4 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 glfw3.lib(context.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(context.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
 glfw3.lib(init.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(init.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
 glfw3.lib(input.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(input.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
-glfw3.lib(monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(monitor.obj)' or at ''; linking object as if no debug info
+glfw3.lib(monitor.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(monitor.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
 glfw3.lib(vulkan.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(vulkan.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
 glfw3.lib(window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(window.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
 glfw3.lib(win32_init.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_init.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
@@ -31,9 +35,9 @@ glfw3.lib(win32_time.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 
 glfw3.lib(win32_thread.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_thread.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
 glfw3.lib(win32_window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_window.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
 glfw3.lib(wgl_context.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(wgl_context.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
-glfw3.lib(egl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(egl_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(osmesa_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(osmesa_context.obj)' or at ''; linking object as if no debug info
-soil2-debug.lib(SOIL2.obj) : warning LNK4099: PDB '' was not found with 'soil2-debug.lib(SOIL2.obj)' or at ''; linking object as if no debug info
+glfw3.lib(egl_context.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(egl_context.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(osmesa_context.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(osmesa_context.obj)' or at 'F:\SunEarthMoon\x64\Release\glfw3.pdb'; linking object as if no debug info
+soil2-debug.lib(SOIL2.obj) : warning LNK4099: PDB 'soil2-debug.pdb' was not found with 'soil2-debug.lib(SOIL2.obj)' or at 'F:\SunEarthMoon\x64\Release\soil2-debug.pdb'; linking object as if no debug info
 soil2-debug.lib(image_DXT.obj) : warning LNK4099: PDB 'soil2-debug.pdb' was not found with 'soil2-debug.lib(image_DXT.obj)' or at 'F:\SunEarthMoon\x64\Release\soil2-debug.pdb'; linking object as if no debug info
 soil2-debug.lib(image_helper.obj) : warning LNK4099: PDB 'soil2-debug.pdb' was not found with 'soil2-debug.lib(image_helper.obj)' or at 'F:\SunEarthMoon\x64\Release\soil2-debug.pdb'; linking object as if no debug info
 soil2-debug.lib(wfETC.obj) : warning LNK4099: PDB 'soil2-debug.pdb' was not found with 'soil2-debug.lib(wfETC.obj)' or at 'F:\SunEarthMoon\x64\Release\soil2-debug.pdb'; linking object as if no debug info
