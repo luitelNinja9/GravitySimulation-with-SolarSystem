@@ -4,8 +4,10 @@
 \contentsline {section}{Objectives}{4}%
 \contentsline {section}{Methodology}{5}%
 \contentsline {subsection}{Techonologies Used}{5}%
-\contentsline {subsection}{Algorithm Used}{5}%
-\contentsline {section}{Result}{9}%
-\contentsline {section}{Conclusion}{10}%
-\contentsline {section}{Further Enhancement}{10}%
-\contentsline {section}{References}{10}%
+\contentsline {subsection}{Procedures}{5}%
+\contentsline {subsection}{Algorithm Description}{5}%
+\contentsline {section}{Result}{10}%
+\contentsline {section}{Comparision between Mid term project and Final Project}{13}%
+\contentsline {section}{Conclusion}{14}%
+\contentsline {section}{Further Enhancement}{14}%
+\contentsline {section}{References}{14}%

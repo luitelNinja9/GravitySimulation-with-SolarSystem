@@ -125,9 +125,12 @@ Gravity simulation, a computer graphics project is designed to model the working
 \clearpage
 \section{Methodology}
 \subsection{Techonologies Used}
-OpenGL C++ (Version 4.3) was used to develop this project. GNU Image Manipulation Program (GIMP) was used to develop normal mapping of all the texture image.
+OpenGL C++ (Version 4.3) along with GLEW and GLM were used to develop this project. GNU Image Manipulation Program (GIMP) was used to develop normal mapping of all the texture image.
 
-\subsection{Algorithm Used}
+\subsection{Procedures}
+At first model of all heavenly bodies were created using a simple sphere development algorithm. Then texture were  loaded along with their normal mapping. Normal mapping of all the texture images were created using GNU Image Manipulation Program(GIMP). Before rendering heavenly bodies and 3D modelling of spacecraft and satellites, Depth buffer was disabled and then skybox was loaded and rendered. Then all the heavenly bodies and 3D models were rendered. For the calculation of path of moon around the earth which is revolving around the sun, matrix stack was used which is described briefly in the later section. Features for the addition of stars, planets and moons was added to study the simulation of gravity. For that, Newton's law of gravitation was used. All the mentioned algorithms are described briefly in the next section.    
+
+\subsection{Algorithm Description}
 \begin{enumerate}
 	\item Parameter Calculation
 	
@@ -156,7 +159,7 @@ OpenGL C++ (Version 4.3) was used to develop this project. GNU Image Manipulatio
 	\begin{center}
 	\includegraphics[scale = 0.5]{sphere/1.png}
 	\end{center}
-\clearpage
+
 	Step 2: Step through the vertices, building two triangles at each step.
 	
 	\begin{center}
@@ -168,8 +171,8 @@ OpenGL C++ (Version 4.3) was used to develop this project. GNU Image Manipulatio
 	Step 4: 
 	
 	\begin{center}
-	\includegraphics[scale = 0.3]{sphere/5.png}
-	\includegraphics[scale = 0.3]{sphere/6.png}
+	\includegraphics[scale = 0.5]{sphere/5.png}
+	\includegraphics[scale = 0.5]{sphere/6.png}
 	\end{center}
 	
 	for each horizontal slice in the sphere \{
@@ -181,7 +184,7 @@ OpenGL C++ (Version 4.3) was used to develop this project. GNU Image Manipulatio
 	\qquad \}
 	
 	\}
-\clearpage
+
 	Step 6: Calculate the texture coordinate
 	
 	\begin{center}
@@ -234,20 +237,80 @@ OpenGL C++ (Version 4.3) was used to develop this project. GNU Image Manipulatio
 	\qquad $G = \frac{N_{y} + 1}{2}$, 
 	\qquad $B = \frac{N_{z} + 1}{2}$
 	
+	\item Lighting	
+	\begin{center}
+	\includegraphics[scale = 0.5]{lighting/1.png}
+	\end{center}
+	
+	For lighting, at first model vertices and vertex normals are placed into buffers. Then model-view and projection transformation matrix as well as lighting and material characteristics are placed into uniform variables. Normal vector $\vec{N}$, light source vector $\vec{L}$ and view vector $\vec{V}$ is computed in vertex shader and sent to fragment shader along with gl\textunderscore Position. R, $\theta$ and $\phi$ are computed. Then contribution of ambient light, diffused light and specular light is computed. Finally, output color is obtained along with the effect of intensity attenuation.
+	
+	\begin{center}
+	$\overrightarrow{color} = \overrightarrow{TexColor} * (\overrightarrow{GA} + \overrightarrow{LA} + \overrightarrow{LD} * max(\vec{L}.\vec{N}, 0.0) + \overrightarrow{LS} * max(\vec{H}.\vec{N}, 0.0))^{matShiness}$
+	\end{center}
+	
+	where $\vec{GA}$ = Global ambient, $\vec{LA}$ = Ambient Light, $\vec{LD}$ = Diffuse, $\vec{LS}$ = Specular Light 
+	
 \end{enumerate}
 
 \clearpage
+
 \section{Result}
+
+3D modelling of the space craft loaded in OpenGL can be seen in the following picture. 
+
 \begin{center}
-	\includegraphics[scale = 0.4]{result/4.png}
-	\includegraphics[scale = 0.4]{result/2.png}
-	
+	\includegraphics[scale = 0.7]{result/4.png}
+\end{center}
+
+3 figures below shows the 3D modelling of satellite revolving the earth and implementation of Phong Lighting model can also be observed.
+\begin{center}
 	\includegraphics[scale = 0.4]{result/3.png}
-	\includegraphics[scale = 0.4]{result/1.png}
-	
+	\includegraphics[scale = 0.4]{result/2.png}
+	\includegraphics[scale = 0.7]{result/1.png}
+\end{center}
+
+Figures below shows the normal mapping of the moon texture and its enhancement in moon surface. Normal mapping of moon texture shown in the left figure was created using GNU Image Manipulation Program(GIMP).
+
+\begin{center}
+	\includegraphics[scale=0.03]{result/8k_moon_normal.jpg}	
+	\includegraphics[scale=0.2]{result/moon.png}
+\end{center}
+
+\clearpage
+
+Figure below shows the binary stars which were added using buttons for addition of stars. Velocity and position of these newly added stars or planets or moons are calculated on the basis of Newton's law of gravitation.
+
+\begin{center}
+	\includegraphics[scale=0.2]{result/bin.png}
+	\includegraphics[scale=0.2]{result/bin1.png}
+\end{center}
+
+
+Figure below shows the rendering of solar system. This picture was taken from the mid-term project and it clearly shows the effect of Phong Lighting model.
+
+\begin{center}
 	\includegraphics[scale = 0.8]{result/5.png}
 \end{center}
-	
+
+\clearpage
+
+\section{Comparision between Mid term project and Final Project}
+In mid term project, there was implementation of skybox and sphere development algorithm in order to simulate the solar system. Along with these, Giroud and Phong Lighting model was implemented. All these algorithms were implemented from scratch and the result can be observed below:
+
+\begin{center}
+\includegraphics[scale = 0.7]{result/5.png}
+\end{center}
+
+Improvements in final project:
+\begin{enumerate}
+	\item Mathematical modelling of gravity was done using Newton's law of gravitation.
+	\item Normal mapping was implemented to enhance the surface details of heavenly bodies.
+	\item Matrix stack was used in order to calculate the path of moon.
+	\item Addition of heavenly bodies like stars, planets and moons were possible for gravity simulation.
+	\item 3D modelling of spacecraft and satellites were created in blender and loaded with OpenGL.
+\end{enumerate}
+
+All the changes and improvements can be observed in the result section.
 
 \clearpage
 \section{Conclusion}
